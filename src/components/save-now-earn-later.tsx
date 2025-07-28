@@ -298,34 +298,6 @@ export default function SaveNowEarnLater() {
         {/* Results Section */}
         {showResults && calculations && (
           <section className="space-y-8 animate-slide-up" aria-live="polite" role="region" aria-label="Investment projection results">
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {calculations.projections.map((projection) => (
-                <Card key={projection.years} className="card-enhanced hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-xl font-semibold">{projection.years} Years</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Total Value</p>
-                      <p className="text-3xl font-bold text-green-600">{formatCurrency(projection.futureValue)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">You Saved</p>
-                      <p className="text-lg font-semibold text-foreground">{formatCurrency(projection.totalContributions)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Investment Returns</p>
-                      <p className="text-lg font-semibold text-primary">{formatCurrency(projection.totalReturns)}</p>
-                    </div>
-                    <Badge variant="secondary" className="w-full justify-center py-2 text-sm font-medium">
-                      +{projection.returnPercentage}% gain
-                    </Badge>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
             {/* Chart Section */}
             <Card className="card-enhanced">
               <CardHeader>
@@ -366,6 +338,34 @@ export default function SaveNowEarnLater() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Summary Cards in 2x2 Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {calculations.projections.map((projection) => (
+                <Card key={projection.years} className="card-enhanced hover:shadow-xl transition-shadow duration-300">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-xl font-semibold">{projection.years} Years</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Total Value</p>
+                      <p className="text-3xl font-bold text-green-600">{formatCurrency(projection.futureValue)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">You Saved</p>
+                      <p className="text-lg font-semibold text-foreground">{formatCurrency(projection.totalContributions)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Investment Returns</p>
+                      <p className="text-lg font-semibold text-primary">{formatCurrency(projection.totalReturns)}</p>
+                    </div>
+                    <Badge variant="secondary" className="w-full justify-center py-2 text-sm font-medium">
+                      +{projection.returnPercentage}% gain
+                    </Badge>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
 
             {/* Breakdown Chart */}
             <Card className="card-enhanced">
