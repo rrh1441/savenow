@@ -28,12 +28,24 @@ export default function SaveNowEarnLater() {
   const [showResults, setShowResults] = useState(false)
 
   const filteredItems = useMemo(() => {
+    console.log('🔍 Search debug:', { 
+      searchTerm, 
+      itemsCount: items?.length || 0,
+      firstFewItems: items?.slice(0, 3)?.map(i => ({ name: i.name, category: i.category })) || []
+    })
+    
     if (!items) return []
-    return items.filter(
+    
+    const filtered = items.filter(
       (item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.category && item.category.toLowerCase().includes(searchTerm.toLowerCase())),
     )
+    
+    console.log('🎯 Filtered results:', filtered.length, 'items found')
+    console.log('📝 Filtered items:', filtered.map(i => i.name))
+    
+    return filtered
   }, [searchTerm, items])
 
   const calculations = useMemo(() => {
