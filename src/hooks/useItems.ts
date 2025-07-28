@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
 
 export interface Item {
-  id: string
+  id: number
   name: string
-  category: string
-  default_price_usd: number
+  category: string | null
+  avgPrice: number
 }
 
 export function useItems() {
@@ -18,8 +18,8 @@ export function useItems() {
       try {
         const supabase = createClient()
         const { data, error } = await supabase
-          .from('items')
-          .select('id, name, category, default_price_usd')
+          .from('item_cost')
+          .select('id, name, category, avgPrice')
           .order('name')
 
         if (error) {

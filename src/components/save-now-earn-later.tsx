@@ -32,14 +32,14 @@ export default function SaveNowEarnLater() {
     return items.filter(
       (item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchTerm.toLowerCase()),
+        (item.category && item.category.toLowerCase().includes(searchTerm.toLowerCase())),
     )
   }, [searchTerm, items])
 
   const calculations = useMemo(() => {
     if (!selectedItem || !frequency) return null
 
-    const price = customPrice ? Number.parseFloat(customPrice) : selectedItem.default_price_usd
+    const price = customPrice ? Number.parseFloat(customPrice) : selectedItem.avgPrice
     const freqData = frequencies.find((f) => f.value === frequency)
     if (!price || !freqData) return null
 
@@ -88,7 +88,7 @@ export default function SaveNowEarnLater() {
 
   const handleItemSelect = (item: Item) => {
     setSelectedItem(item)
-    setCustomPrice(item.default_price_usd.toString())
+    setCustomPrice(item.avgPrice.toString())
     setSearchTerm("")
   }
 
@@ -186,9 +186,9 @@ export default function SaveNowEarnLater() {
                       <div className="flex justify-between items-center">
                         <div>
                           <div className="font-medium">{item.name}</div>
-                          <div className="text-sm text-gray-500 capitalize">{item.category}</div>
+                          <div className="text-sm text-gray-500 capitalize">{item.category || 'Other'}</div>
                         </div>
-                        <Badge variant="secondary">${item.default_price_usd}</Badge>
+                        <Badge variant="secondary">${item.avgPrice}</Badge>
                       </div>
                     </div>
                   ))}
