@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Search, DollarSign, TrendingUp, Calculator, PiggyBank } from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts"
-import { useItems, type Item } from "@/hooks/useItems"
+import { useItemSearch, type Item } from "@/hooks/useItems"
 
 const frequencies = [
   { value: "daily", label: "Daily", multiplier: 365 },
@@ -20,33 +20,23 @@ const frequencies = [
 ]
 
 export default function SaveNowEarnLater() {
-  const { items, loading, error } = useItems()
+  const { items, loading, error, searchItems } = useItemSearch()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
   const [customPrice, setCustomPrice] = useState("")
   const [frequency, setFrequency] = useState("")
   const [showResults, setShowResults] = useState(false)
 
-  const filteredItems = useMemo(() => {
-    console.log('🔍 Search debug:', { 
-      searchTerm, 
-      itemsCount: items?.length || 0,
-      firstFewItems: items?.slice(0, 3)?.map(i => ({ name: i.name, category: i.category })) || []
-    })
-    
-    if (!items) return []
-    
-    const filtered = items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.category && item.category.toLowerCase().includes(searchTerm.toLowerCase())),
-    )
-    
-    console.log('🎯 Filtered results:', filtered.length, 'items found')
-    console.log('📝 Filtered items:', filtered.map(i => i.name))
-    
-    return filtered
-  }, [searchTerm, items])
+  // Debounced search
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchTerm.trim()) {
+        searchItems(searchTerm)
+      }
+    }, 300)
+
+    return () => clearTimeout(timeoutId)
+  }, [searchTerm, searchItems])
 
   const calculations = useMemo(() => {
     if (!selectedItem || !frequency) return null
@@ -119,16 +109,6 @@ export default function SaveNowEarnLater() {
     }).format(amount)
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
-        <div className="text-center">
-          <PiggyBank className="h-12 w-12 text-blue-600 mx-auto mb-4 animate-pulse" />
-          <p className="text-lg text-gray-600">Loading items...</p>
-        </div>
-      </div>
-    )
-  }
 
   if (error) {
     return (
@@ -186,15 +166,10 @@ export default function SaveNowEarnLater() {
                 />
               </div>
 
-              {/* Search Results or All Items */}
-              {(searchTerm && filteredItems.length > 0) || (!searchTerm && items.length > 0) ? (
+              {/* Search Results */}
+              {searchTerm && items.length > 0 && (
                 <div className="border rounded-md bg-white shadow-sm max-h-48 overflow-y-auto" style={{backgroundColor: '#ffffff', color: '#171717'}}>
-                  {!searchTerm && (
-                    <div className="p-2 bg-blue-50 text-sm text-blue-700 border-b">
-                      Available items (click to select):
-                    </div>
-                  )}
-                  {(searchTerm ? filteredItems : items.slice(0, 10)).map((item) => (
+                  {items.map((item) => (
                     <div
                       key={item.id}
                       className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
@@ -210,11 +185,17 @@ export default function SaveNowEarnLater() {
                     </div>
                   ))}
                 </div>
-              ) : null}
+              )}
 
-              {searchTerm && filteredItems.length === 0 && (
+              {searchTerm && !loading && items.length === 0 && (
                 <div className="text-center py-4 text-gray-500">
                   No items found matching &ldquo;{searchTerm}&rdquo;
+                </div>
+              )}
+
+              {loading && searchTerm && (
+                <div className="text-center py-4 text-gray-500">
+                  Searching...
                 </div>
               )}
             </div>
