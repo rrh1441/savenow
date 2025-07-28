@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Save Now Earn Later - Investment Growth Calculator",
   description: "See how much your small daily purchases could be worth if invested instead",
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
