@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
 
 export interface Item {
@@ -12,6 +12,24 @@ export function useItemSearch() {
   const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // TEST ON LOAD - DELETE THIS LATER
+  useEffect(() => {
+    async function testConnection() {
+      console.log('🚨 TESTING DATABASE CONNECTION ON LOAD')
+      const supabase = createClient()
+      
+      const { data, error } = await supabase
+        .from('item_cost')
+        .select('*')
+        .limit(3)
+      
+      console.log('🚨 TEST RESULT:', { data, error })
+      console.log('🚨 DATA LENGTH:', data?.length)
+      console.log('🚨 FIRST ITEM:', data?.[0])
+    }
+    testConnection()
+  }, [])
 
   const searchItems = useCallback(async (searchTerm: string) => {
     if (!searchTerm.trim()) {
