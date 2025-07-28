@@ -19,6 +19,7 @@ export function useItemSearch() {
       console.log('🚨 TESTING DATABASE CONNECTION ON LOAD')
       const supabase = createClient()
       
+      // Test 1: Basic select
       const { data, error } = await supabase
         .from('item_cost')
         .select('*')
@@ -27,6 +28,20 @@ export function useItemSearch() {
       console.log('🚨 TEST RESULT:', { data, error })
       console.log('🚨 DATA LENGTH:', data?.length)
       console.log('🚨 FIRST ITEM:', data?.[0])
+      
+      // Test 2: Count query to see if RLS is blocking
+      const { count, error: countError } = await supabase
+        .from('item_cost')
+        .select('*', { count: 'exact', head: true })
+      
+      console.log('🚨 COUNT TEST:', { count, countError })
+      
+      // Test 3: Check if we can see any data at all
+      const { data: rawData, error: rawError } = await supabase
+        .rpc('exec', { sql: 'SELECT COUNT(*) FROM item_cost' })
+        .single()
+      
+      console.log('🚨 RAW SQL TEST:', { rawData, rawError })
     }
     testConnection()
   }, [])
