@@ -20,7 +20,7 @@ export function useItems() {
         const supabase = createClient()
         const { data, error } = await supabase
           .from('item_cost')
-          .select('id, name, category, avgPrice')
+          .select('id, name, category, "avgPrice"')
           .order('name')
 
         console.log('📊 Supabase response:', { data, error })
