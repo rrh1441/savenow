@@ -244,7 +244,7 @@ export default function SaveNowEarnLater() {
                       <SelectTrigger>
                         <SelectValue placeholder="How often?" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white border border-gray-200 shadow-lg">
                         {frequencies.map((freq) => (
                           <SelectItem key={freq.value} value={freq.value}>
                             {freq.label}
