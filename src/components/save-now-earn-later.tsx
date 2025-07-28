@@ -133,7 +133,7 @@ export default function SaveNowEarnLater() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4" style={{backgroundColor: '#f0f7ff'}}>
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4 py-8">
@@ -148,7 +148,7 @@ export default function SaveNowEarnLater() {
         </div>
 
         {/* Input Section */}
-        <Card className="shadow-lg">
+        <Card className="shadow-lg bg-white border border-gray-200" style={{backgroundColor: '#ffffff', color: '#171717'}}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calculator className="h-5 w-5" />
@@ -167,17 +167,22 @@ export default function SaveNowEarnLater() {
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="search"
-                  placeholder="Search for coffee, lunch, cigarettes, etc..."
+                  placeholder="Search for items..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
 
-              {/* Search Results */}
-              {searchTerm && filteredItems.length > 0 && (
-                <div className="border rounded-md bg-white shadow-sm max-h-48 overflow-y-auto">
-                  {filteredItems.map((item) => (
+              {/* Search Results or All Items */}
+              {(searchTerm && filteredItems.length > 0) || (!searchTerm && items.length > 0) ? (
+                <div className="border rounded-md bg-white shadow-sm max-h-48 overflow-y-auto" style={{backgroundColor: '#ffffff', color: '#171717'}}>
+                  {!searchTerm && (
+                    <div className="p-2 bg-blue-50 text-sm text-blue-700 border-b">
+                      Available items (click to select):
+                    </div>
+                  )}
+                  {(searchTerm ? filteredItems : items.slice(0, 10)).map((item) => (
                     <div
                       key={item.id}
                       className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
@@ -185,7 +190,7 @@ export default function SaveNowEarnLater() {
                     >
                       <div className="flex justify-between items-center">
                         <div>
-                          <div className="font-medium">{item.name}</div>
+                          <div className="font-medium text-gray-900">{item.name}</div>
                           <div className="text-sm text-gray-500 capitalize">{item.category || 'Other'}</div>
                         </div>
                         <Badge variant="secondary">${item.avgPrice}</Badge>
@@ -193,7 +198,7 @@ export default function SaveNowEarnLater() {
                     </div>
                   ))}
                 </div>
-              )}
+              ) : null}
 
               {searchTerm && filteredItems.length === 0 && (
                 <div className="text-center py-4 text-gray-500">
@@ -275,7 +280,7 @@ export default function SaveNowEarnLater() {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {calculations.projections.map((projection) => (
-                <Card key={projection.years} className="shadow-md">
+                <Card key={projection.years} className="shadow-md bg-white border border-gray-200" style={{backgroundColor: '#ffffff', color: '#171717'}}>
                   <CardHeader className="pb-3">
                     <CardTitle className="text-lg">{projection.years} Years</CardTitle>
                   </CardHeader>
@@ -301,7 +306,7 @@ export default function SaveNowEarnLater() {
             </div>
 
             {/* Chart Section */}
-            <Card className="shadow-lg">
+            <Card className="shadow-lg bg-white border border-gray-200" style={{backgroundColor: '#ffffff', color: '#171717'}}>
               <CardHeader>
                 <CardTitle>Investment Growth Over Time</CardTitle>
                 <CardDescription>
@@ -342,7 +347,7 @@ export default function SaveNowEarnLater() {
             </Card>
 
             {/* Breakdown Chart */}
-            <Card className="shadow-lg">
+            <Card className="shadow-lg bg-white border border-gray-200" style={{backgroundColor: '#ffffff', color: '#171717'}}>
               <CardHeader>
                 <CardTitle>Savings vs Returns Breakdown</CardTitle>
                 <CardDescription>
