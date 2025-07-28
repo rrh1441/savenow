@@ -18,12 +18,27 @@ export function useItems() {
       try {
         console.log('🔍 Fetching items from item_cost table...')
         const supabase = createClient()
+        console.log('🔧 Supabase client config:', {
+          supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+          anonKeyLength: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length
+        })
+        
+        // First try a simple count to test connection
+        const { count } = await supabase
+          .from('item_cost')
+          .select('*', { count: 'exact', head: true })
+        
+        console.log('📊 Table count:', count)
+        
+        // Now try the actual query
         const { data, error } = await supabase
           .from('item_cost')
-          .select('id, name, category, "avgPrice"')
-          .order('name')
+          .select('*')
+          .limit(5)
 
         console.log('📊 Supabase response:', { data, error })
+        console.log('📊 Raw data:', data)
+        console.log('📊 Raw error:', error)
         
         if (error) {
           console.error('❌ Supabase error:', error)
